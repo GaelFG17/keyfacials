@@ -10,7 +10,7 @@
             var imageFile = document.getElementById('imageFile').files[0];
             formData.append('file', imageFile);
 
-            fetch('http://127.0.0.1:5000/upload', {
+            fetch('GAELFLASK.pythonanywhere.com/upload', {
                 method: 'POST',
                 body: formData
             })
