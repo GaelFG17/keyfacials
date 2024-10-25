@@ -1,43 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Facial Landmark Detection</title>
-    <script>
-        function uploadImage() {
-            var formData = new FormData();
-            var imageFile = document.getElementById('imageFile').files[0];
-            formData.append('file', imageFile);
-
-            fetch('https://keysdeploys.onrender.com/upload', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    // Mostrar la imagen procesada en el <img>
-                    var imgTag = document.getElementById('outputImage');
-                    imgTag.src = 'data:image/png;base64,' + data.image;
-                    imgTag.style.display = 'block'; // Mostrar la imagen
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
-    </script>
+    <title>Detección de Puntos Faciales</title>
 </head>
 <body>
-    <h1>Sube una imagen para detectar puntos faciales</h1>
-    <input type="file" id="imageFile">
-    <button onclick="uploadImage()">Subir imagen</button>
+    <h1>Sube una Imagen</h1>
+    <input type="file" id="fileInput" accept="image/*">
+    <button onclick="uploadImage()">Subir</button>
 
-    <!-- Imagen con puntos faciales -->
-    <img id="outputImage" style="display:none;" />
+    <h2>Imagen con Puntos Faciales</h2>
+    <img id="processedImage" style="max-width: 300px; display: none;">
 
+    <script>
+        async function uploadImage() {
+            const input = document.getElementById('fileInput');
+            const formData = new FormData();
+            formData.append('file', input.files[0]);
+
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            const data = await response.json();
+
+            // Mostrar la imagen procesada
+            const processedImage = document.getElementById('processedImage');
+            processedImage.src = 'data:image/png;base64,' + data.image_with_points_base64;
+            processedImage.style.display = 'block';
+
+            // Puedes usar data.drive_id para mostrar un mensaje de éxito o almacenar información si lo deseas
+            console.log('Imagen original subida con ID:', data.drive_id);
+        }
+    </script>
 </body>
 </html>
